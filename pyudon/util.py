@@ -2,7 +2,7 @@ import hashlib
 from pathlib import Path
 
 
-class FileToHashMaker():
+class HashMaker():
     def __init__(self, algorithm="sha256"):
         self._algorithm = algorithm
 
@@ -10,10 +10,13 @@ class FileToHashMaker():
         path = Path(path)
 
         with path.open("rb") as f:
-            binary = f.read()
+            data = f.read()
 
+        return self.make_from_binary(data)
+
+    def make_from_binary(self, data: bytes):
         hash_obj = hashlib.new(self._algorithm)
-        hash_obj.update(binary)
+        hash_obj.update(data)
         hashed_name = hash_obj.hexdigest()
 
         return hashed_name
