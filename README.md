@@ -8,3 +8,6 @@ The Udonarium API to create archived files on Python.<br>
 気が向いたらそのほかの機能が追加されるかもしれません。<br>
 
 # Usage
+
+## License
+[MIT License](https://github.com/alfa0112/pyudon/blob/master/LICENSE)
