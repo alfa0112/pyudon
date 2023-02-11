@@ -1,4 +1,3 @@
-from pathlib import Path
 import xml.dom.minidom as md
 import xml.etree.ElementTree as ET
 
@@ -14,8 +13,8 @@ class ChatXML():
 
     def add_chat_tab(self, name):
         ET.SubElement(self._root_node,
-                        "caht-tab",
-                        attrib={"name": name})
+                      "chat-tab",
+                      attrib={"name": name})
 
     def write(self, path, encoding="utf-8"):
         with path.open("w") as f:
@@ -26,4 +25,3 @@ class ChatXML():
         prettied = dom.toprettyxml(encoding=encoding)
 
         return prettied.decode(encoding)
-
