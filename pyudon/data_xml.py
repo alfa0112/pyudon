@@ -1,6 +1,6 @@
-from pathlib import Path
 import xml.dom.minidom as md
 import xml.etree.ElementTree as ET
+from pathlib import Path
 
 from .util import HashMaker
 
@@ -21,7 +21,7 @@ def _add_card(node, front_hashed_name: str, back_hashed_name: str, x, y, size=2,
                             attrib={"name": "card"})
     base_image_data_node = ET.SubElement(data_card_node,
                             "data",
-                            attrib={"name": "image"})        
+                            attrib={"name": "image"})
     ET.SubElement(base_image_data_node,
                     "data",
                     attrib={"type": "image",
@@ -77,7 +77,7 @@ class DeckNode():
 
 class CharacterNode():
     def __init__(self, parent_node, name, size=1, x=0, y=0, z=0, img_identifier=""):
-        self._parent_node = parent_node        
+        self._parent_node = parent_node
         self._resource_node = None
 
         # <character>
@@ -124,7 +124,7 @@ class CharacterNode():
                                         attrib={"name": "detail"})
 
     def add_resource(self, name, max_value, current_value):
-        if not self._resource_node:        
+        if not self._resource_node:
             self._resource_node = ET.SubElement(self._detail_node,
                                                 "data",
                                                 attrib={"name": "detail"})
@@ -169,11 +169,11 @@ class DeckDefineRow():
 class DeckDefine():
     def __init__(self, img_dir: Path, df):
         required_columns = {"index","name","image_front","image_back","deck","number"}
-        
+
         if not required_columns <= set(df.columns):
             raise ValueError(f"missing columns: {required_columns - set(df.columns)}")
 
-        self._df = df.copy()    
+        self._df = df.copy()
         self._img_dir = img_dir
 
     @property
@@ -231,7 +231,7 @@ class TableNode():
 
     def set_bg_img_from_path(self, img_path):
         hashed_img_name = self._hash_maker.make_from_file(img_path)
-        self._table_node.set("backgroundImageIdentifier", hashed_img_name)            
+        self._table_node.set("backgroundImageIdentifier", hashed_img_name)
 
 
 class DataXML():
@@ -242,8 +242,8 @@ class DataXML():
         if root_node:
             self._root_node = root_node
         else:
-            self._root_node = ET.Element('room')            
-            self._first_table_node = self.add_game_table("First table")        
+            self._root_node = ET.Element('room')
+            self._first_table_node = self.add_game_table("First table")
 
     @property
     def first_table_node(self):
@@ -285,7 +285,7 @@ class DataXML():
                                             "isShowTotal": "true"})
         base_data_node = ET.SubElement(card_stack_node,
                                     "data",
-                                    attrib={"name": "card-stack"})                                
+                                    attrib={"name": "card-stack"})
         type_data_node = ET.SubElement(base_data_node,
                                         "data",
                                         attrib={"name": "image"})
@@ -317,10 +317,10 @@ class DataXML():
 
         for row in define.iterrows():
             if not row.deck in stacks.keys():
-                stacks[row.deck] = self.add_card_stack(row.deck)       
-            
+                stacks[row.deck] = self.add_card_stack(row.deck)
+
             stacks[row.deck].add_card_from_path(img_dir / row.image_front,
-                                                img_dir / row.image_back, 
+                                                img_dir / row.image_back,
                                                 num=row.number,
                                                 x=0,
                                                 y=0,
@@ -334,14 +334,14 @@ class DataXML():
         front_img_bin = front_img_path.open("rb").read()
         back_img_bin = back_img_path.open("rb").read()
 
-        self.add_card_from_bin(front_img_bin, back_img_bin, x, y, size, state)        
+        self.add_card_from_bin(front_img_bin, back_img_bin, x, y, size, state)
 
     def add_card_from_bin(self, front_img_bin: bytes, back_img_bin: bytes, x=0, y=0, size=2, state=0):
         front_hashed_name = self._hash_maker.make_from_binary(front_img_bin)
         back_hashed_name = self._hash_maker.make_from_binary(back_img_bin)
 
         _add_card(self._root_node, front_hashed_name, back_hashed_name, x, y, size, state)
-    
+
     def write(self, path, encoding="utf-8"):
         with path.open("w") as f:
             f.write(self.get_body())

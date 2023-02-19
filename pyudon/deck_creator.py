@@ -6,7 +6,4 @@ class CardImageTable():
         self._df = df.copy()
 
     def get_deck():
-
-        
-
-    
+        pass

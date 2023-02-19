@@ -1,4 +1,3 @@
-from pathlib import Path
 import xml.dom.minidom as md
 import xml.etree.ElementTree as ET
 
@@ -26,4 +25,3 @@ class SummaryXML():
         prettied = dom.toprettyxml(encoding=encoding)
 
         return prettied.decode(encoding)
-
