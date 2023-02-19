@@ -1,22 +1,43 @@
-from pathlib import Path
 import random
-import re
-import xml.etree.ElementTree as ET
 import zipfile
+from pathlib import Path
 
 from pandas import DataFrame
 
-from pyudon import DeckNode, DataXML, ChatXML, SummaryXML, HashMaker
+from .chat_xml import ChatXML
+from .data_xml import DataXML
+from .summary_xml import SummaryXML
+from .util import HashMaker
+
+
+class Game:
+    def __init__(self):
+        self._data_xml = DataXML()
+        self._chat_xml = ChatXML()
+        self._summary_xml = SummaryXML()
+
+        self._hash_maker = HashMaker()
+
+    def create_zip(self, file_path: Path):
+        with (file_path.open("bw") as f,
+              zipfile.ZipFile(f, "w") as zipf):
+            zipf.writestr("data.xml", self._data_xml.get_body())
+            zipf.writestr("chat.xml", self._chat_xml.get_body())
+            zipf.writestr("summary.xml", self._summary_xml.get_body())
+
+
+class Deck:
+    pass
 
 
 class CardImageTable():
     def __init__(self, img_dir: Path, card_image_table_df: DataFrame):
         self._card_image_table_df = card_image_table_df.copy()
         self._card_image_table_df["image"] = self._card_image_table_df["image"].map(lambda name: img_dir / name)
-        
-        self._dict = {series["name"]: series["image"] 
-                        for _, series 
-                        in self._card_image_table_df.iterrows()}        
+
+        self._dict = {series["name"]: series["image"]
+                        for _, series
+                        in self._card_image_table_df.iterrows()}
 
     def get_dict(self) -> dict:
         return self._dict
@@ -75,7 +96,7 @@ class ClockWorkerDataXML():
         self._magical_sercle_deck_lv3_red.add_card_from_path(self._cards_image_dict["sercle3red"],
                                                             self._cards_image_dict["back"],
                                                             3)
-        
+
         self._magical_sercle_deck_lv1_blue = self._data_xml.add_card_stack("MagicalSercleCardDeckLv1Blue",
                                                                 -300, -50)
         self._magical_sercle_deck_lv1_blue.add_card_from_path(self._cards_image_dict["sercle1blue"],
@@ -130,28 +151,3 @@ class ClockWorkerDataXML():
 
     def get_body(self, encoding="utf-8") -> str:
         return self._data_xml.get_body(encoding)
-
-
-class ClockWorkerGame():
-    def __init__(self, card_image_table: CardImageTable, bg_img_path: Path):
-        self._card_image_table = card_image_table
-        self._bg_img_path = bg_img_path
-
-        self._data_xml = ClockWorkerDataXML(card_image_table.get_dict(), bg_img_path)
-        self._chat_xml = ChatXML()
-        self._summary_xml = SummaryXML(data_tag="VP")
-
-        self._hash_maker = HashMaker()
-
-    def create_random_field(self, x=0, y=0, x_distance=100, y_distance=130):
-        self._data_xml.create_random_field(x, y, x_distance, y_distance)
-
-    def create_zip(self, file_path):
-        with zipfile.ZipFile(file_path, "w") as zipf:
-            zipf.writestr("data.xml", self._data_xml.get_body())
-            zipf.writestr("chat.xml", self._chat_xml.get_body())
-            zipf.writestr("summary.xml", self._summary_xml.get_body())
-            for img_path in self._card_image_table.iter_img_paths():
-                zipf.write(img_path, arcname=self._hash_maker.make_from_file(img_path)+img_path.suffix)
-            if self._bg_img_path:
-                zipf.write(self._bg_img_path, arcname=self._hash_maker.make_from_file(self._bg_img_path)+img_path.suffix)
