@@ -20,4 +20,3 @@ class HashMaker():
         hashed_name = hash_obj.hexdigest()
 
         return hashed_name
-
