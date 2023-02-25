@@ -7,51 +7,51 @@ from .util import HashMaker
 
 def _add_card(node, front_hashed_name: str, back_hashed_name: str, x, y, size=2, state=0):
     card_node = ET.SubElement(node,
-                            "card",
-                            attrib={"location.name": "table",
-                                    "location.x": str(x),
-                                    "location.y": str(y),
-                                    "posZ": "0",
-                                    "state": str(state),
-                                    "rotate": "0",
-                                    "zindex": "0",
-                                    "owner": ""})
+                              "card",
+                              attrib={"location.name": "table",
+                                      "location.x": str(x),
+                                      "location.y": str(y),
+                                      "posZ": "0",
+                                      "state": str(state),
+                                      "rotate": "0",
+                                      "zindex": "0",
+                                      "owner": ""})
     data_card_node = ET.SubElement(card_node,
-                            "data",
-                            attrib={"name": "card"})
+                                   "data",
+                                   attrib={"name": "card"})
     base_image_data_node = ET.SubElement(data_card_node,
-                            "data",
-                            attrib={"name": "image"})
+                                         "data",
+                                         attrib={"name": "image"})
     ET.SubElement(base_image_data_node,
-                    "data",
-                    attrib={"type": "image",
-                            "name": "imageIdentifier"})
+                  "data",
+                  attrib={"type": "image",
+                          "name": "imageIdentifier"})
     front_image_data_node = ET.SubElement(base_image_data_node,
-                                            "data",
-                                            attrib={"type": "image",
-                                                    "name": "front"})
+                                          "data",
+                                          attrib={"type": "image",
+                                                  "name": "front"})
     front_image_data_node.text = front_hashed_name
     back_image_data_node = ET.SubElement(base_image_data_node,
-                                            "data",
-                                            attrib={"type": "image",
-                                                    "name": "back"})
+                                         "data",
+                                         attrib={"type": "image",
+                                                 "name": "back"})
     back_image_data_node.text = back_hashed_name
 
     common_data_node = ET.SubElement(data_card_node,
-                            "data",
-                            attrib={"name": "common"})
+                                     "data",
+                                     attrib={"name": "common"})
     name_data_node = ET.SubElement(common_data_node,
-                            "data",
-                            attrib={"name": "name"})
+                                   "data",
+                                   attrib={"name": "name"})
     name_data_node.text = "Card"
     size_data_node = ET.SubElement(common_data_node,
-                            "data",
-                            attrib={"name": "size"})
+                                   "data",
+                                   attrib={"name": "size"})
     size_data_node.text = str(size)
 
     ET.SubElement(data_card_node,
-                "data",
-                attrib={"name": "detail"})
+                  "data",
+                  attrib={"name": "detail"})
 
 
 class DeckNode():
@@ -65,14 +65,16 @@ class DeckNode():
         front_img_bin = front_img_path.open("rb").read()
         back_img_bin = back_img_path.open("rb").read()
 
-        self.add_card_from_bin(front_img_bin, back_img_bin, num, x, y, size, state)
+        self.add_card_from_bin(
+            front_img_bin, back_img_bin, num, x, y, size, state)
 
     def add_card_from_bin(self, front_img_bin: bytes, back_img_bin: bytes, num=1, x=0, y=0, size=2, state=0):
         front_hashed_name = self._hash_maker.make_from_binary(front_img_bin)
         back_hashed_name = self._hash_maker.make_from_binary(back_img_bin)
 
         for _ in range(num):
-            _add_card(self._card_root_node, front_hashed_name, back_hashed_name, x, y, size, state)
+            _add_card(self._card_root_node, front_hashed_name,
+                      back_hashed_name, x, y, size, state)
 
 
 class CharacterNode():
@@ -82,46 +84,46 @@ class CharacterNode():
 
         # <character>
         char_node = ET.SubElement(self._parent_node,
-                                    "character",
-                                    attrib={"location.name": "table",
-                                            "location.x": str(x),
-                                            "location.y": str(y),
-                                            "posZ": str(z),
-                                            "rotate": "0",
-                                            "roll": "0"})
+                                  "character",
+                                  attrib={"location.name": "table",
+                                          "location.x": str(x),
+                                          "location.y": str(y),
+                                          "posZ": str(z),
+                                          "rotate": "0",
+                                          "roll": "0"})
         #   <data name="character">
         char_data_char_node = ET.SubElement(char_node,
                                             "data",
                                             attrib={"name": "character"})
         #       <data name="image">
         char_data_image_node = ET.SubElement(char_data_char_node,
-                                        "data",
-                                        attrib={"name": "image"})
+                                             "data",
+                                             attrib={"name": "image"})
         #           <data type="image" name="imageIdentifier">
         char_data_image_identifier_node = ET.SubElement(char_data_image_node,
-                                            "data",
-                                            attrib={"type": "image",
-                                                    "name": "imageIdentifier"})
+                                                        "data",
+                                                        attrib={"type": "image",
+                                                                "name": "imageIdentifier"})
         char_data_image_identifier_node.text = img_identifier
 
         #       <data name="common">
         char_data_common_node = ET.SubElement(char_data_char_node,
-                                            "data",
-                                            attrib={"name": "common"})
+                                              "data",
+                                              attrib={"name": "common"})
         #           <data name="name">
         char_data_common_name_node = ET.SubElement(char_data_common_node,
-                                                    "data",
-                                                    attrib={"name": "name"})
+                                                   "data",
+                                                   attrib={"name": "name"})
         char_data_common_name_node.text = name
         #           <data name="size">
         char_data_common_size_node = ET.SubElement(char_data_common_node,
-                                                    "data",
-                                                    attrib={"name": "size"})
+                                                   "data",
+                                                   attrib={"name": "size"})
         char_data_common_size_node.text = str(size)
         #       <data name="detail">
         self._detail_node = ET.SubElement(char_data_char_node,
-                                        "data",
-                                        attrib={"name": "detail"})
+                                          "data",
+                                          attrib={"name": "detail"})
 
     def add_resource(self, name, max_value, current_value):
         if not self._resource_node:
@@ -168,10 +170,12 @@ class DeckDefineRow():
 
 class DeckDefine():
     def __init__(self, img_dir: Path, df):
-        required_columns = {"index","name","image_front","image_back","deck","number"}
+        required_columns = {"index", "name",
+                            "image_front", "image_back", "deck", "number"}
 
         if not required_columns <= set(df.columns):
-            raise ValueError(f"missing columns: {required_columns - set(df.columns)}")
+            raise ValueError(
+                f"missing columns: {required_columns - set(df.columns)}")
 
         self._df = df.copy()
         self._img_dir = img_dir
@@ -194,30 +198,30 @@ class DeckDefine():
 
 class TableNode():
     def __init__(self,
-                root_node,
-                name,
-                width=20,
-                height=15,
-                grid_size=50,
-                image_identifier="testTableBackgroundImage_image",
-                bg_image_identifier="imageIdentifier",
-                bg_filter_type="",
-                selected="true",
-                grid_type=0,
-                grid_color="#000000e6"):
+                 root_node,
+                 name,
+                 width=20,
+                 height=15,
+                 grid_size=50,
+                 image_identifier="testTableBackgroundImage_image",
+                 bg_image_identifier="imageIdentifier",
+                 bg_filter_type="",
+                 selected="true",
+                 grid_type=0,
+                 grid_color="#000000e6"):
         self._hash_maker = HashMaker()
         self._table_node = ET.SubElement(root_node,
-                                        'game-table',
-                                        attrib={"name": name,
-                                                "width": str(width),
-                                                "height": str(height),
-                                                "gridSize": str(grid_size),
-                                                "imageIdentifier": image_identifier,
-                                                "backgroundImageIdentifier": bg_image_identifier,
-                                                "backgroundFilterType": bg_filter_type,
-                                                "selected": selected,
-                                                "gridType": str(grid_type),
-                                                "gridColor": grid_color})
+                                         'game-table',
+                                         attrib={"name": name,
+                                                 "width": str(width),
+                                                 "height": str(height),
+                                                 "gridSize": str(grid_size),
+                                                 "imageIdentifier": image_identifier,
+                                                 "backgroundImageIdentifier": bg_image_identifier,
+                                                 "backgroundFilterType": bg_filter_type,
+                                                 "selected": selected,
+                                                 "gridType": str(grid_type),
+                                                 "gridColor": grid_color})
 
     def set_width(self, width):
         self._table_node.set("width", str(width))
@@ -236,7 +240,7 @@ class TableNode():
 
 class DataXML():
     def __init__(self,
-                root_node=None):
+                 root_node=None):
         self._hash_maker = HashMaker()
 
         if root_node:
@@ -250,64 +254,64 @@ class DataXML():
         return self._first_table_node
 
     def add_game_table(self,
-                        name,
-                        width=20,
-                        height=15,
-                        grid_size=50,
-                        image_identifier="testTableBackgroundImage_image",
-                        bg_image_identifier="imageIdentifier",
-                        bg_filter_type="",
-                        selected="true",
-                        grid_type=0,
-                        grid_color="#000000e6"):
+                       name,
+                       width=20,
+                       height=15,
+                       grid_size=50,
+                       image_identifier="testTableBackgroundImage_image",
+                       bg_image_identifier="imageIdentifier",
+                       bg_filter_type="",
+                       selected="true",
+                       grid_type=0,
+                       grid_color="#000000e6"):
         return TableNode(self._root_node,
-                        name,
-                        width=width,
-                        height=height,
-                        grid_size=grid_size,
-                        image_identifier=image_identifier,
-                        bg_image_identifier=bg_image_identifier,
-                        bg_filter_type=bg_filter_type,
-                        selected=selected,
-                        grid_type=grid_type,
-                        grid_color=grid_color)
+                         name,
+                         width=width,
+                         height=height,
+                         grid_size=grid_size,
+                         image_identifier=image_identifier,
+                         bg_image_identifier=bg_image_identifier,
+                         bg_filter_type=bg_filter_type,
+                         selected=selected,
+                         grid_type=grid_type,
+                         grid_color=grid_color)
 
     def add_card_stack(self, name, x=0, y=0, z=0) -> DeckNode:
         card_stack_node = ET.SubElement(self._root_node,
-                                    "card-stack",
-                                    attrib={"location.name": "table",
-                                            "location.x": str(x),
-                                            "location.y": str(y),
-                                            "posZ": str(z),
-                                            "rotate": "0",
-                                            "zindex": "0",
-                                            "owner": "",
-                                            "isShowTotal": "true"})
+                                        "card-stack",
+                                        attrib={"location.name": "table",
+                                                "location.x": str(x),
+                                                "location.y": str(y),
+                                                "posZ": str(z),
+                                                "rotate": "0",
+                                                "zindex": "0",
+                                                "owner": "",
+                                                "isShowTotal": "true"})
         base_data_node = ET.SubElement(card_stack_node,
-                                    "data",
-                                    attrib={"name": "card-stack"})
+                                       "data",
+                                       attrib={"name": "card-stack"})
         type_data_node = ET.SubElement(base_data_node,
-                                        "data",
-                                        attrib={"name": "image"})
+                                       "data",
+                                       attrib={"name": "image"})
         ET.SubElement(type_data_node,
-                        "data",
-                        attrib={"type": "image",
-                                "name": "imageIdentifier"})
+                      "data",
+                      attrib={"type": "image",
+                              "name": "imageIdentifier"})
 
         common_data_node = ET.SubElement(base_data_node,
-                                        "data",
-                                        attrib={"name": "common"})
+                                         "data",
+                                         attrib={"name": "common"})
         name_data_node = ET.SubElement(common_data_node,
-                                        "data",
-                                        attrib={"name": "name"})
+                                       "data",
+                                       attrib={"name": "name"})
         name_data_node.text = name
         ET.SubElement(base_data_node,
-                        "data",
-                        attrib={"name": "detail"})
+                      "data",
+                      attrib={"name": "detail"})
 
         card_root_node = ET.SubElement(card_stack_node,
-                                    "node",
-                                    attrib={"name": "cardRoot"})
+                                       "node",
+                                       attrib={"name": "cardRoot"})
 
         return DeckNode(card_stack_node, card_root_node)
 
@@ -316,7 +320,7 @@ class DataXML():
         img_dir = define.img_dir
 
         for row in define.iterrows():
-            if not row.deck in stacks.keys():
+            if row.deck not in stacks.keys():
                 stacks[row.deck] = self.add_card_stack(row.deck)
 
             stacks[row.deck].add_card_from_path(img_dir / row.image_front,
@@ -340,7 +344,8 @@ class DataXML():
         front_hashed_name = self._hash_maker.make_from_binary(front_img_bin)
         back_hashed_name = self._hash_maker.make_from_binary(back_img_bin)
 
-        _add_card(self._root_node, front_hashed_name, back_hashed_name, x, y, size, state)
+        _add_card(self._root_node, front_hashed_name,
+                  back_hashed_name, x, y, size, state)
 
     def write(self, path, encoding="utf-8"):
         with path.open("w") as f:
