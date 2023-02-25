@@ -1,4 +1,3 @@
-from pathlib import Path
 import xml.dom.minidom as md
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -23,7 +22,8 @@ class ChatXML():
             f.write(self.get_body(encoding))
 
     def get_body(self, encoding: str = "utf-8") -> str:
+        # 最小構成のDOMを作成
         dom = md.parseString(ET.tostring(self._root_node, encoding))
-        prettied = dom.toprettyxml(encoding=encoding)
 
-        return prettied.decode(encoding)
+        # 成形済みxml文字列を返す
+        return dom.toprettyxml()
