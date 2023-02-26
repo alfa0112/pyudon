@@ -81,6 +81,7 @@ class CharacterNode():
     def __init__(self, parent_node, name, size=1, x=0, y=0, z=0, img_identifier=""):
         self._parent_node = parent_node
         self._resource_node = None
+        self._info_node = None
 
         # <character>
         char_node = ET.SubElement(self._parent_node,
@@ -129,7 +130,7 @@ class CharacterNode():
         if not self._resource_node:
             self._resource_node = ET.SubElement(self._detail_node,
                                                 "data",
-                                                attrib={"name": "detail"})
+                                                attrib={"name": "resource"})
         # <data type="numberResource" currentValue="200" name="HP">
         self._resource_node = ET.SubElement(self._resource_node,
                                             "data",
@@ -138,62 +139,17 @@ class CharacterNode():
                                                     "name": name})
         self._resource_node.text = str(max_value)
 
-
-class DeckDefineRow():
-    def __init__(self, series):
-        self._series = series
-
-    @property
-    def index(self):
-        return self._series["index"]
-
-    @property
-    def name(self):
-        return self._series["name"]
-
-    @property
-    def image_front(self):
-        return self._series["image_front"]
-
-    @property
-    def image_back(self):
-        return self._series["image_back"]
-
-    @property
-    def deck(self):
-        return self._series["deck"]
-
-    @property
-    def number(self):
-        return self._series["number"]
-
-
-class DeckDefine():
-    def __init__(self, img_dir: Path, df):
-        required_columns = {"index", "name",
-                            "image_front", "image_back", "deck", "number"}
-
-        if not required_columns <= set(df.columns):
-            raise ValueError(
-                f"missing columns: {required_columns - set(df.columns)}")
-
-        self._df = df.copy()
-        self._img_dir = img_dir
-
-    @property
-    def img_dir(self) -> Path:
-        return self._img_dir
-
-    def iterrows(self):
-        for _, series in self._df.iterrows():
-            yield DeckDefineRow(series)
-
-    def iter_img_paths(self):
-        for file_name in set(self._df["image_front"]):
-            yield self._img_dir / file_name
-
-        for file_name in set(self._df["image_back"]):
-            yield self._img_dir / file_name
+    def add_info(self, name: str, value: str) -> None:
+        if not self._info_node:
+            self._info_node = ET.SubElement(self._detail_node,
+                                            "data",
+                                            attrib={"name": "info"})
+        # <data type="note" name="Desctiprion">
+        self._resource_node = ET.SubElement(self._resource_node,
+                                            "data",
+                                            attrib={"type": "note",
+                                                    "name": name})
+        self._resource_node.text = value
 
 
 class TableNode():
@@ -239,15 +195,10 @@ class TableNode():
 
 
 class DataXML():
-    def __init__(self,
-                 root_node=None):
+    def __init__(self):
         self._hash_maker = HashMaker()
 
-        if root_node:
-            self._root_node = root_node
-        else:
-            self._root_node = ET.Element('room')
-            self._first_table_node = self.add_game_table("First table")
+        self._root_node = ET.Element('room')
 
     @property
     def first_table_node(self):
@@ -314,22 +265,6 @@ class DataXML():
                                        attrib={"name": "cardRoot"})
 
         return DeckNode(card_stack_node, card_root_node)
-
-    def add_card_stacks_from_define(self, define: DeckDefine):
-        stacks = {}
-        img_dir = define.img_dir
-
-        for row in define.iterrows():
-            if row.deck not in stacks.keys():
-                stacks[row.deck] = self.add_card_stack(row.deck)
-
-            stacks[row.deck].add_card_from_path(img_dir / row.image_front,
-                                                img_dir / row.image_back,
-                                                num=row.number,
-                                                x=0,
-                                                y=0,
-                                                size=2,
-                                                state=0)
 
     def add_character(self, name, size=1, x=0, y=0, z=0):
         return CharacterNode(self._root_node, name, size, x, y, z)
