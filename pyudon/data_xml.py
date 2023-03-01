@@ -268,18 +268,9 @@ class DataXML():
 
         return DeckNode(card_stack_node, card_root_node)
 
-    def add_character(self, name, size=1, x=0, y=0, z=0):
-        return CharacterNode(self._root_node, name, size, x, y, z)
-
-    def add_card_from_path(self, front_img_path: Path, back_img_path: Path, x=0, y=0, size=2, state=0):
-        front_img_bin = front_img_path.open("rb").read()
-        back_img_bin = back_img_path.open("rb").read()
-
-        self.add_card_from_bin(front_img_bin, back_img_bin, x, y, size, state)
-
-    def add_card_from_bin(self, front_img_bin: bytes, back_img_bin: bytes, x=0, y=0, size=2, state=0):
-        front_hashed_name = self._hash_maker.make_from_binary(front_img_bin)
-        back_hashed_name = self._hash_maker.make_from_binary(back_img_bin)
+    def add_character(self, name: str, size: float = 1, x: float = 0, y: float = 0, z: float = 0,
+                      img_identifier: str = "") -> CharacterNode:
+        return CharacterNode(self._root_node, name, size, x, y, z, img_identifier)
 
     def add_card(self, name: str, top_hashed_name: str, bottom_hashed_name: str,
                  x: float = 0, y: float = 0, size: float = 2, state: float = 0) -> None:
