@@ -34,7 +34,8 @@ gameモジュールにあるもので基本的にはすべて完結します。
 "TestCharacter"という名前の駒を1体生成し、テーブル上に配置します。
 
 ```python
-from pyudon.game import Character, DefaultBackgroudImage, Game, Table
+from pyudon.game import Character, Game, Table
+from pyudon.util import DefaultBackgroudImage
 
 # テーブル生成
 table_image = DefaultBackgroudImage()
