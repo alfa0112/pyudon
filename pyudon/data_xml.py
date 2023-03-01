@@ -61,9 +61,11 @@ class DeckNode():
 
         self._hash_maker = HashMaker()
 
-    def add_card_from_path(self, front_img_path: Path, back_img_path: Path, num=1, x=0, y=0, size=2, state=0):
-        front_img_bin = front_img_path.open("rb").read()
-        back_img_bin = back_img_path.open("rb").read()
+    def add_card(self, name: str, top_hashed_name: str, bottom_hashed_name: str,
+                 num=1, x=0, y=0, size=2, state=0):
+        for _ in range(num):
+            _add_card(self._card_root_node, name, top_hashed_name,
+                      bottom_hashed_name, x, y, size, state)
 
         self.add_card_from_bin(
             front_img_bin, back_img_bin, num, x, y, size, state)
@@ -279,8 +281,10 @@ class DataXML():
         front_hashed_name = self._hash_maker.make_from_binary(front_img_bin)
         back_hashed_name = self._hash_maker.make_from_binary(back_img_bin)
 
-        _add_card(self._root_node, front_hashed_name,
-                  back_hashed_name, x, y, size, state)
+    def add_card(self, name: str, top_hashed_name: str, bottom_hashed_name: str,
+                 x: float = 0, y: float = 0, size: float = 2, state: float = 0) -> None:
+        _add_card(self._root_node, name, top_hashed_name,
+                  bottom_hashed_name, x, y, size, state)
 
     def write(self, path, encoding="utf-8"):
         with path.open("w") as f:
