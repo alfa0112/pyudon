@@ -5,7 +5,7 @@ from pathlib import Path
 from .util import HashMaker
 
 
-def _add_card(node, front_hashed_name: str, back_hashed_name: str, x, y, size=2, state=0):
+def _add_card(node: ET.Element, name: str, top_hashed_name: str, bottom_hashed_name: str, x, y, size=2, state=0):
     card_node = ET.SubElement(node,
                               "card",
                               attrib={"location.name": "table",
@@ -26,16 +26,16 @@ def _add_card(node, front_hashed_name: str, back_hashed_name: str, x, y, size=2,
                   "data",
                   attrib={"type": "image",
                           "name": "imageIdentifier"})
-    front_image_data_node = ET.SubElement(base_image_data_node,
+    top_image_data_node = ET.SubElement(base_image_data_node,
                                           "data",
                                           attrib={"type": "image",
                                                   "name": "front"})
-    front_image_data_node.text = front_hashed_name
-    back_image_data_node = ET.SubElement(base_image_data_node,
+    top_image_data_node.text = top_hashed_name
+    bottom_image_data_node = ET.SubElement(base_image_data_node,
                                          "data",
                                          attrib={"type": "image",
                                                  "name": "back"})
-    back_image_data_node.text = back_hashed_name
+    bottom_image_data_node.text = bottom_hashed_name
 
     common_data_node = ET.SubElement(data_card_node,
                                      "data",
@@ -43,7 +43,7 @@ def _add_card(node, front_hashed_name: str, back_hashed_name: str, x, y, size=2,
     name_data_node = ET.SubElement(common_data_node,
                                    "data",
                                    attrib={"name": "name"})
-    name_data_node.text = "Card"
+    name_data_node.text = name
     size_data_node = ET.SubElement(common_data_node,
                                    "data",
                                    attrib={"name": "size"})
