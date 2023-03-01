@@ -67,16 +67,38 @@ class DeckNode():
             _add_card(self._card_root_node, name, top_hashed_name,
                       bottom_hashed_name, x, y, size, state)
 
-        self.add_card_from_bin(
-            front_img_bin, back_img_bin, num, x, y, size, state)
 
-    def add_card_from_bin(self, front_img_bin: bytes, back_img_bin: bytes, num=1, x=0, y=0, size=2, state=0):
-        front_hashed_name = self._hash_maker.make_from_binary(front_img_bin)
-        back_hashed_name = self._hash_maker.make_from_binary(back_img_bin)
+class CharacterDetailSectionNode:
+    def __init__(self, parent_node: ET.Element, title: str):
+        self._node = ET.SubElement(
+            parent_node,
+            "data",
+            attrib=dict(
+                name=title
+            )
+        )
 
-        for _ in range(num):
-            _add_card(self._card_root_node, front_hashed_name,
-                      back_hashed_name, x, y, size, state)
+    def add_resource(self, name: str, current_value: float, max_value: float) -> None:
+        self._resource_node = ET.SubElement(
+            self._node,
+            "data",
+            attrib={"type": "numberResource",
+                    "currentValue": str(current_value),
+                    "name": name}
+        )
+        self._resource_node.text = str(max_value)
+
+    def add_note(self, title: str, value: str) -> None:
+        # <data type="note" name="Desctiprion">
+        self._item_node = ET.SubElement(
+            self._node,
+            "data",
+            attrib=dict(
+                type="note",
+                name=title
+            )
+        )
+        self._item_node.text = value
 
 
 class CharacterNode():
@@ -128,30 +150,19 @@ class CharacterNode():
                                           "data",
                                           attrib={"name": "detail"})
 
-    def add_resource(self, name, max_value, current_value):
-        if not self._resource_node:
-            self._resource_node = ET.SubElement(self._detail_node,
-                                                "data",
-                                                attrib={"name": "resource"})
-        # <data type="numberResource" currentValue="200" name="HP">
-        self._resource_node = ET.SubElement(self._resource_node,
-                                            "data",
-                                            attrib={"type": "numberResource",
-                                                    "currentValue": str(current_value),
-                                                    "name": name})
-        self._resource_node.text = str(max_value)
+    def add_detail_section(self, title: str) -> CharacterDetailSectionNode:
+        """_summary_
 
-    def add_info(self, name: str, value: str) -> None:
-        if not self._info_node:
-            self._info_node = ET.SubElement(self._detail_node,
-                                            "data",
-                                            attrib={"name": "info"})
-        # <data type="note" name="Desctiprion">
-        self._resource_node = ET.SubElement(self._resource_node,
-                                            "data",
-                                            attrib={"type": "note",
-                                                    "name": name})
-        self._resource_node.text = value
+        Args:
+            title (str): _description_
+
+        Returns:
+            _type_: _description_
+        """
+        return CharacterDetailSectionNode(
+            self._detail_node,
+            title
+        )
 
 
 class TableNode():
