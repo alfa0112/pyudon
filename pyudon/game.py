@@ -163,12 +163,16 @@ class Game:
             )
         for on_board_character in self._on_board_characters:
             character = on_board_character.character
+            if character.image:
+                img_identifier = character.image.hashnized_name
+            else:
+                img_identifier = None
             character_node = self._data_xml.add_character(
                 character.name,
                 character.size,
                 x=on_board_character.x,
                 y=on_board_character.y,
-                img_identifier=character.image.hashnized_name
+                img_identifier=img_identifier
             )
             for detail_section in character.detail_sections:
                 detail_section_node = character_node.add_detail_section(detail_section.name)
@@ -219,7 +223,8 @@ class Game:
         for table in self._tables:
             table.image.to_zipfile(zipf)
         for on_board_character in self._on_board_characters:
-            on_board_character.character.image.to_zipfile(zipf)
+            if on_board_character.character.image:
+                on_board_character.character.image.to_zipfile(zipf)
         for on_board_card in self._on_board_cards:
             on_board_card.card.top_image.to_zipfile(zipf)
             on_board_card.card.bottom_image.to_zipfile(zipf)
