@@ -20,7 +20,4 @@ dependencies = [
 dynamic = ["version"]
 
 [tool.setuptools.dynamic]
-version = {attr = "udon_deckgen.__version__"}
-
-[project.scripts]
-udon-deckgen = "udon_deckgen.__main__:main"
+version = {attr = "pyudon.__version__"}
