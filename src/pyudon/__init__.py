@@ -3,7 +3,7 @@ BUG: setuptoolsのバグ？で__version__を他のファイルからインポー
 ひとまず__version__を__init__.py内で宣言することで回避
 """
 # from ._version import __version__
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 
 from .data import DefaultBackgroudImage, Image
 from .game import (Card, CardState, Character, CharacterDetailSection,
