@@ -1,11 +1,23 @@
 import zipfile
+from abc import ABC, abstractmethod
 
 import puremagic
 
 from .util import HashMaker
 
 
-class Image:
+class IImage(ABC):
+    @property
+    @abstractmethod
+    def hashnized_name(self) -> str:
+        pass
+
+    @abstractmethod
+    def to_zipfile(self, zipf: zipfile.ZipFile) -> None:
+        pass
+
+
+class Image(IImage):
     def __init__(self, data: bytes) -> None:
         self._data = data
 
@@ -21,7 +33,7 @@ class Image:
         zipf.writestr(f"{self._hashnized_name}{self._extension}", self._data)
 
 
-class DefaultBackgroudImage(Image):
+class DefaultBackgroudImage(IImage):
     def __init__(self) -> None:
         pass
 

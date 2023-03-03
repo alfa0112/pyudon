@@ -4,10 +4,10 @@ from enum import Enum, auto
 from pathlib import Path
 
 from .chat_xml import ChatXML
+from .data import IImage, Image
 from .data_xml import DataXML
 from .summary_xml import SummaryXML
 from .util import HashMaker
-from .data import Image
 
 
 class TableGridType(Enum):
@@ -30,10 +30,10 @@ class TableBackgroundFilter(Enum):
 @dataclass(frozen=True)
 class Table:
     name: str
-    image: Image
+    image: IImage
     width: float = 20
     height: float = 20
-    background_image: Image = None
+    background_image: IImage = None
     grid_type: TableGridType = TableGridType.SQUARE
     grid_color: TableGridColor = TableGridColor.BLACK
     background_filter: TableBackgroundFilter = TableBackgroundFilter.NONE
@@ -70,7 +70,7 @@ class CharacterDetailSection:
 class Character:
     name: str
     size: float = 1
-    image: Image = None
+    image: IImage = None
     detail_sections: list[CharacterDetailSection] = field(default_factory=list)
 
     def add_detail_section(self, detail_section: CharacterDetailSection) -> None:
@@ -92,8 +92,8 @@ class CardState(Enum):
 @dataclass(frozen=True)
 class Card:
     name: str
-    top_image: Image
-    bottom_image: Image
+    top_image: IImage
+    bottom_image: IImage
     size: float = 2.0
     state: CardState = CardState.TOP
 
