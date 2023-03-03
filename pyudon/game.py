@@ -6,7 +6,8 @@ from pathlib import Path
 from .chat_xml import ChatXML
 from .data_xml import DataXML
 from .summary_xml import SummaryXML
-from .util import HashMaker, Image
+from .util import HashMaker
+from .data import Image
 
 
 class TableGridType(Enum):
