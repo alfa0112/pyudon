@@ -1,6 +1,6 @@
 """
 """
-from ._version import __version__ # noqa
+from ._version import __version__  # noqa: F401
 
 from .data import DefaultBackgroudImage, Image
 from .game import (Card, CardState, Character, CharacterDetailSection,
