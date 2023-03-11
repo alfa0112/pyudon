@@ -20,4 +20,4 @@ dependencies = [
 dynamic = ["version"]
 
 [tool.setuptools.dynamic]
-version = {attr = "pyudon.__version__"}
+version = {attr = "pyudon._version.__version__"}

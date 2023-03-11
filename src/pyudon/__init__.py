@@ -1,9 +1,6 @@
 """
-BUG: setuptoolsのバグ？で__version__を他のファイルからインポートしようとするとサブモジュールのインポート処理で失敗する
-ひとまず__version__を__init__.py内で宣言することで回避
 """
-# from ._version import __version__
-__version__ = "0.2.1"
+from ._version import __version__ # noqa
 
 from .data import DefaultBackgroudImage, Image
 from .game import (Card, CardState, Character, CharacterDetailSection,
