@@ -34,8 +34,7 @@ gameモジュールにあるもので基本的にはすべて完結します。
 "TestCharacter"という名前の駒を1体生成し、テーブル上に配置します。
 
 ```python
-from pyudon.game import Character, Game, Table
-from pyudon.util import DefaultBackgroudImage
+from pyudon import Character, Game, Table, DefaultBackgroudImage
 
 # テーブル生成
 table_image = DefaultBackgroudImage()
@@ -50,7 +49,7 @@ character = Character("TestCharacter")
 game.add_character(character, x=0, y=0)
 
 # Zipファイル作成
-game.create_zip("/temp/archive.zip")
+game.create_zip("temp/archive.zip")
 ```
 
 "sample.py"内でその他のオブジェクトも一通り生成しているので、覗いてみてください。
