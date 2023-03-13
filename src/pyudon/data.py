@@ -1,31 +1,23 @@
-import hashlib
 import zipfile
-from pathlib import Path
+from abc import ABC, abstractmethod
 
 import puremagic
 
-
-class HashMaker():
-    def __init__(self, algorithm="sha256"):
-        self._algorithm = algorithm
-
-    def make_from_file(self, path: Path) -> str:
-        path = Path(path)
-
-        with path.open("rb") as f:
-            data = f.read()
-
-        return self.make_from_binary(data)
-
-    def make_from_binary(self, data: bytes):
-        hash_obj = hashlib.new(self._algorithm)
-        hash_obj.update(data)
-        hashed_name = hash_obj.hexdigest()
-
-        return hashed_name
+from .util import HashMaker
 
 
-class Image:
+class IImage(ABC):
+    @property
+    @abstractmethod
+    def hashnized_name(self) -> str:
+        pass
+
+    @abstractmethod
+    def to_zipfile(self, zipf: zipfile.ZipFile) -> None:
+        pass
+
+
+class Image(IImage):
     def __init__(self, data: bytes) -> None:
         self._data = data
 
@@ -41,7 +33,7 @@ class Image:
         zipf.writestr(f"{self._hashnized_name}{self._extension}", self._data)
 
 
-class DefaultBackgroudImage(Image):
+class DefaultBackgroudImage(IImage):
     def __init__(self) -> None:
         pass
 

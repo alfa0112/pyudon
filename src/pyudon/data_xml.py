@@ -167,17 +167,17 @@ class CharacterNode():
 
 class TableNode():
     def __init__(self,
-                 root_node,
-                 name,
-                 width=20,
-                 height=15,
-                 grid_size=50,
-                 image_identifier="testTableBackgroundImage_image",
-                 bg_image_identifier="imageIdentifier",
-                 bg_filter_type="",
-                 selected="true",
-                 grid_type=0,
-                 grid_color="#000000e6"):
+                 root_node: ET.Element,
+                 name: str,
+                 width: float=20,
+                 height: float=15,
+                 grid_size: float=50,
+                 image_identifier: str="testTableBackgroundImage_image",
+                 bg_image_identifier: str="imageIdentifier",
+                 bg_filter_type: str="",
+                 selected: str="true",
+                 grid_type: int=0,
+                 grid_color: str="#000000e6"):
         self._hash_maker = HashMaker()
         self._table_node = ET.SubElement(root_node,
                                          'game-table',
@@ -213,21 +213,17 @@ class DataXML():
 
         self._root_node = ET.Element('room')
 
-    @property
-    def first_table_node(self):
-        return self._first_table_node
-
     def add_game_table(self,
-                       name,
-                       width=20,
-                       height=15,
-                       grid_size=50,
-                       image_identifier="testTableBackgroundImage_image",
-                       bg_image_identifier="imageIdentifier",
-                       bg_filter_type="",
-                       selected="true",
-                       grid_type=0,
-                       grid_color="#000000e6"):
+                       name: str,
+                       width: float=20,
+                       height: float=15,
+                       grid_size: float=50,
+                       image_identifier: str="testTableBackgroundImage_image",
+                       bg_image_identifier: str="imageIdentifier",
+                       bg_filter_type: str="",
+                       selected: str="true",
+                       grid_type: int=0,
+                       grid_color: str="#000000e6"):
         return TableNode(self._root_node,
                          name,
                          width=width,
