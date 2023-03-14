@@ -28,8 +28,6 @@ $ python sample.py temp/
 
 ## Usage
 
-gameモジュールにあるもので基本的にはすべて完結します。
-
 以下が簡単な使用例です。
 "TestCharacter"という名前の駒を1体生成し、テーブル上に配置します。
 
