@@ -229,6 +229,10 @@ class Game:
         for on_board_card in self._on_board_cards:
             on_board_card.card.top_image.to_zipfile(zipf)
             on_board_card.card.bottom_image.to_zipfile(zipf)
+        for on_board_deck in self._on_board_decks:
+            for deck_card in on_board_deck.deck.cards:
+                deck_card.top_image.to_zipfile(zipf)
+                deck_card.bottom_image.to_zipfile(zipf)
 
     def add_table(self, table: Table) -> None:
         self._tables.append(table)
