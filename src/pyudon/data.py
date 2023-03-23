@@ -8,6 +8,10 @@ from .util import HashMaker
 
 class IImage(ABC):
     @abstractmethod
+    def __eq__(self, __o: object) -> bool:
+        pass
+
+    @abstractmethod
     def __hash__(self) -> int:
         pass
 
@@ -29,6 +33,11 @@ class Image(IImage):
         self._hashnized_name = hash_maker.make_from_binary(data)
         self._extension = puremagic.from_string(data)
 
+    def __eq__(self, __o: object) -> bool:
+        if not isinstance(__o, Image):
+            return False
+        return self._hashnized_name == __o._hashnized_name
+
     def __hash__(self) -> int:
         return int.from_bytes(self._hashnized_name.encode())
 
@@ -43,6 +52,9 @@ class Image(IImage):
 class DefaultBackgroudImage(IImage):
     def __init__(self) -> None:
         pass
+
+    def __eq__(self, __o: object) -> bool:
+        return isinstance(__o, DefaultBackgroudImage)
 
     def __hash__(self) -> int:
         return int.from_bytes("DefaultBackgroudImage".encode())
