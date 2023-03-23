@@ -221,18 +221,22 @@ class Game:
             self._dump_all_images(zipf)
 
     def _dump_all_images(self, zipf: zipfile.ZipFile) -> None:
+        dump_images_set: set[IImage] = set()
         for table in self._tables:
-            table.image.to_zipfile(zipf)
+            dump_images_set.add(table.image)
         for on_board_character in self._on_board_characters:
             if on_board_character.character.image:
-                on_board_character.character.image.to_zipfile(zipf)
+                dump_images_set.add(on_board_character.character.image)
         for on_board_card in self._on_board_cards:
-            on_board_card.card.top_image.to_zipfile(zipf)
-            on_board_card.card.bottom_image.to_zipfile(zipf)
+            dump_images_set.add(on_board_card.card.top_image)
+            dump_images_set.add(on_board_card.card.bottom_image)
         for on_board_deck in self._on_board_decks:
             for deck_card in on_board_deck.deck.cards:
-                deck_card.top_image.to_zipfile(zipf)
-                deck_card.bottom_image.to_zipfile(zipf)
+                dump_images_set.add(deck_card.top_image)
+                dump_images_set.add(deck_card.bottom_image)
+
+        for image in dump_images_set:
+            image.to_zipfile(zipf)
 
     def add_table(self, table: Table) -> None:
         self._tables.append(table)
