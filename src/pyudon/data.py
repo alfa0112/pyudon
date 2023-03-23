@@ -16,6 +16,10 @@ class IImage(ABC):
     def to_zipfile(self, zipf: zipfile.ZipFile) -> None:
         pass
 
+    @abstractmethod
+    def __hash__(self) -> str:
+        pass
+
 
 class Image(IImage):
     def __init__(self, data: bytes) -> None:
@@ -24,6 +28,9 @@ class Image(IImage):
         hash_maker = HashMaker("sha256")
         self._hashnized_name = hash_maker.make_from_binary(data)
         self._extension = puremagic.from_string(data)
+
+    def __hash__(self) -> str:
+        return self._hashnized_name
 
     @property
     def hashnized_name(self) -> str:
@@ -36,6 +43,9 @@ class Image(IImage):
 class DefaultBackgroudImage(IImage):
     def __init__(self) -> None:
         pass
+
+    def __hash__(self) -> str:
+        return "DefaultBackgroudImage"
 
     @property
     def hashnized_name(self) -> str:
