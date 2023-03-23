@@ -7,6 +7,10 @@ from .util import HashMaker
 
 
 class IImage(ABC):
+    @abstractmethod
+    def __hash__(self) -> int:
+        pass
+
     @property
     @abstractmethod
     def hashnized_name(self) -> str:
@@ -14,10 +18,6 @@ class IImage(ABC):
 
     @abstractmethod
     def to_zipfile(self, zipf: zipfile.ZipFile) -> None:
-        pass
-
-    @abstractmethod
-    def __hash__(self) -> str:
         pass
 
 
@@ -29,8 +29,8 @@ class Image(IImage):
         self._hashnized_name = hash_maker.make_from_binary(data)
         self._extension = puremagic.from_string(data)
 
-    def __hash__(self) -> str:
-        return self._hashnized_name
+    def __hash__(self) -> int:
+        return int.from_bytes(self._hashnized_name.encode())
 
     @property
     def hashnized_name(self) -> str:
@@ -44,8 +44,8 @@ class DefaultBackgroudImage(IImage):
     def __init__(self) -> None:
         pass
 
-    def __hash__(self) -> str:
-        return "DefaultBackgroudImage"
+    def __hash__(self) -> int:
+        return int.from_bytes("DefaultBackgroudImage".encode())
 
     @property
     def hashnized_name(self) -> str:
